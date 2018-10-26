@@ -1,0 +1,18 @@
+NOTIFY sip:32470702903@80.201.237.33:5071 SIP/2.0
+Via:SIP/2.0/UDP 192.168.192.21:5060
+To: <sip:+3222406421@81.201.237.33>
+From: <sip:+3222406421@192.168.192.21>;tag=AAABBB000211111111
+Date: Mon, 10 Jul 2000 03:55:07 GMT
+Call-Id: 1349882@192.168.192.21
+CSeq: 101 NOTIFY
+Max-Forward: 70
+User-Agent: LMBUTS
+Contact: <sip:+3222406421@192.168.192.21:5060>
+Event: message-summary
+Subscription-State: active
+Content-Type: application/simple-message-summary
+Content-Length: 23
+
+Messages-Waiting: yes
+Message-Account: sip:olivier.ksiazek@192.168.192.21
+Voice-Message: 0/0 (0/0)
