@@ -34,26 +34,24 @@ def FMU():
     tag = uuid.uuid1()
     args = {'fmudevice': fmuphone,'cucmserver': cucmserver,'ciscodevice': ciscophone,'jour': jour,'tag': tag, 'message': amountvm}
     sip_notify_msg = '''\
-    NOTIFY sip:{fmudevice}@80.201.237.33:5071 SIP/2.0
-    Via:SIP/2.0/UDP {cucmserver}:5060
-    To: <sip:{ciscodevice}@81.201.237.33>
-    From: <sip:{ciscodevice}@{cucmserver}>;tag={tag}
-    Date: {jour}
-    Call-Id: 1349882@{cucmserver}
-    CSeq: 101 NOTIFY
-    Max-Forward: 70
-    User-Agent: LMBUTS
-    Contact: <sip:{ciscodevice}@{cucmserver}:5060>
-    Event: message-summary
-    Subscription-State: active
-    Content-Type: application/simple-message-summary
-    Content-Length: 23
-    
-    Messages-Waiting: yes
-    Voice-Message: {message}/0
-    
-    
-    '''.format(**args)
+NOTIFY sip:{fmudevice}@80.201.237.33:5071 SIP/2.0
+Via:SIP/2.0/UDP {cucmserver}:5060
+To: <sip:{ciscodevice}@81.201.237.33>
+From: <sip:{ciscodevice}@{cucmserver}>;tag={tag}
+Date: {jour}
+Call-Id: 1349882@{cucmserver}
+CSeq: 101 NOTIFY
+Max-Forward: 70
+User-Agent: LMBUTS
+Contact: <sip:{ciscodevice}@{cucmserver}:5060>
+Event: message-summary
+Subscription-State: active
+Content-Type: application/simple-message-summary
+Content-Length: 23
+
+Messages-Waiting: yes
+Voice-Message: {message}/0\n\n'''.format(**args)
+
     print(sip_notify_msg)
 
     sip_notify = sip_notify_msg.encode()
@@ -64,7 +62,7 @@ def FMU():
        s.bind(('', 5060))
        s.settimeout(10)
        s.connect(('80.201.237.33', 5071))
-       s.send(sip_notify)
+       s.sendall(sip_notify)
        sys.stdout.write('\nRequest sent to vNAG\n')
        sys.stdout.write(sip_notify.decode() + '\n')
        response = s.recv(65535)

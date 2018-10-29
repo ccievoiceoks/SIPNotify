@@ -1,10 +1,10 @@
 import re
 import socket
 import sys
-import mailing2
+import Flask_Notify2
 #sip_notify = sys.argv[1]
 #sip_notify = sip_notify.encode()
-sip_notify = mailing2.sip_notify
+sip_notify = Flask_Notify2.sip_notify()
 print(sip_notify)
 try:
    s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
@@ -13,7 +13,7 @@ try:
    s.bind(('0.0.0.0', 5060))
    s.settimeout(10)
    s.connect(('80.201.237.33', 5071))
-   s.send(sip_notify)
+   s.sendall(sip_notify)
    sys.stdout.write('\nRequest sent to vNAG\n')
    sys.stdout.write(sip_notify.decode() + '\n')
    response = s.recv(65535)
