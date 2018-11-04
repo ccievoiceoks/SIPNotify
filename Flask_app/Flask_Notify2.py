@@ -1,16 +1,45 @@
-from flask import Flask,request
+""" This module will help to enhance the MWI Notification
+for Cisco Third-Party on vNAG."""
+from flask import Flask, request
 import json
 import datetime
 import uuid
 import re
 import socket
 import sys
-import subprocess
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+
 def SIP_Connect(sip_notify):
+    """ This function will establish a socket(SIP) to the vNAG
+
+    :param sip_notify bytes: SIP NOTIFY Message to send to vNAG
+    :return: Returns normally the SIP acknowledge from the vNAG
+    :rtype: bytes
+
+    :Example:
+    NOTIFY sip:{fmudevice}@80.201.237.33:5071 SIP/2.0
+    Via:SIP/2.0/UDP {cucmserver}:5060
+    To: <sip:{ciscodevice}@81.201.237.33>
+    From: <sip:{ciscodevice}@{cucmserver}>;tag={tag}
+    Date: {jour}
+    Call-Id: 1349882@{cucmserver}
+    CSeq: 101 NOTIFY
+    Max-Forward: 70
+    User-Agent: LMBUTS
+    Contact: <sip:{ciscodevice}@{cucmserver}:5060>
+    Event: message-summary
+    Subscription-State: active
+    Content-Type: application/simple-message-summary
+    Content-Length: 23
+
+    Messages-Waiting: yes
+    Voice-Message: {message}/0\n\n'''.format(**args)
+    print(sip_notify_msg)
+    """
+
     try:
        s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM,socket.IPPROTO_UDP)
        # If no source address or source port is provided, the socket module
@@ -41,7 +70,7 @@ def SIP_Connect(sip_notify):
            # Socket has not been assigned.
            pass
 
-@app.route('/',methods=['POST','GET'])
+@app.route('/', methods=['POST','GET'])
 def hello():
     print('Main Mailing Script')
     return 'Hello in the Main Mailing Script'
@@ -55,7 +84,7 @@ def FMU():
     splitted = data.split('\n')
     voicelines = splitted[17]
     messagedesc = splitted[18]
-    ciscophone,fmuphone = voicelines.split(' ')[1:4:2]
+    ciscophone , fmuphone = voicelines.split(' ')[1:4:2]
     amountvm = messagedesc.split(':')[1]
     print('\n The Cisco phone extension is {} and is associated with FMU extension {}, there are {} Voice messages'.format(ciscophone,fmuphone,amountvm))
     # print(json_decode)
