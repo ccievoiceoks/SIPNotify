@@ -4,14 +4,14 @@ import re
 import socket
 import sys
 
-fmudevice = '+32470702903'
+fmudevice = '+32470702906'
 fmudevice = fmudevice[1:]
-ciscodevice = '+3222406421'
+ciscodevice = '+3222407572'
 cucmserver = '192.168.192.21'
 today = datetime.datetime.today()
 jour = '{:%a, %d %b %Y %H:%M:%S} GMT'.format(today)
 tag = uuid.uuid1()
-message = '1'
+message = '0'
 args = {'fmudevice': fmudevice,'cucmserver': cucmserver,'ciscodevice': ciscodevice,'jour': jour,'tag': tag, 'message': message}
 
 sip_notify_msg = '''\

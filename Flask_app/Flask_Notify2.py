@@ -18,8 +18,7 @@ def SIP_Connect(sip_notify):
        s.bind(('0.0.0.0', 5060))
        s.settimeout(10)
        s.connect(('80.201.237.33', 5071))
-       print(sip_notify)
-       s.send(sip_notify)
+       s.sendall(sip_notify)
        sys.stdout.write('\nRequest sent to vNAG\n')
        sys.stdout.write(sip_notify.decode() + '\n')
        response = s.recv(65535)
@@ -43,28 +42,28 @@ def SIP_Connect(sip_notify):
 
 @app.route('/',methods=['POST','GET'])
 def hello():
-    print('Main Mailing Script')
-    return 'Hello in the Main Mailing Script'
+    print('This script is the SIP Notify MWI for FMU Third Party Devices')
+    return 'This script is the SIP Notify MWI for FMU Third Party Devices'
 
 @app.route('/FMU',methods=['POST','GET'])
 def FMU():
     input = request.get_data()
     data = input.decode('utf8')
-    #json_decode = json.loads(data)
-    print('Mail received')
+    print('FMU Mail Notification is received, the script will handle it in some seconds')
     splitted = data.split('\n')
     voicelines = splitted[17]
     messagedesc = splitted[18]
+    
     ciscophone,fmuphone = voicelines.split(' ')[1:4:2]
     amountvm = messagedesc.split(':')[1]
-    print('\n The Cisco phone extension is {} and is associated with FMU extension {}, there are {} Voice messages'.format(ciscophone,fmuphone,amountvm))
-    # print(json_decode)
+    # print('\n The Cisco phone extension is {} and is associated with FMU extension {}, there are {} Voice messages'.format(ciscophone,fmuphone,amountvm))
     fmuphone = fmuphone[1:]
     cucmserver = '192.168.192.21'
     today = datetime.datetime.today()
     jour = '{:%a, %d %b %Y %H:%M:%S} GMT'.format(today)
     tag = uuid.uuid1()
     args = {'fmudevice': fmuphone,'cucmserver': cucmserver,'ciscodevice': ciscophone,'jour': jour,'tag': tag, 'message': amountvm}
+    
     sip_notify_msg = '''\
 NOTIFY sip:{fmudevice}@80.201.237.33:5071 SIP/2.0
 Via:SIP/2.0/UDP {cucmserver}:5060
@@ -83,12 +82,11 @@ Content-Length: 23
 
 Messages-Waiting: yes
 Voice-Message: {message}/0\n\n'''.format(**args)
-    print(sip_notify_msg)
+    # print(sip_notify_msg)
 
     sip_notify = sip_notify_msg.encode()
     VNAG = SIP_Connect(sip_notify)
     #print(VNAG)
-    #subprocess.Popen('python3 SIP.py', shell=True)
 
     return '200'
 
